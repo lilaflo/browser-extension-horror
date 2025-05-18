@@ -9,6 +9,11 @@ cp content.js temp_extension/
 cp config.js temp_extension/
 cp options.html temp_extension/
 cp options.js temp_extension/
+cp icon16.png temp_extension/
+cp icon32.png temp_extension/
+cp icon48.png temp_extension/
+cp icon96.png temp_extension/
+cp icon128.png temp_extension/
 
 # Create the ZIP file
 cd temp_extension
