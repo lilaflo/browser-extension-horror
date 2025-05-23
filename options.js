@@ -1,6 +1,33 @@
 // Load saved settings when the page loads
 document.addEventListener('DOMContentLoaded', () => {
-  loadSettings();
+  console.log('DOM Content Loaded');
+  console.log('CONFIG object:', window.CONFIG);
+
+  // Initialize default settings if none exist
+  browser.storage.local.get(['triggerWords', 'ntfyTopic', 'ntfyServer']).then((result) => {
+    console.log('Storage result:', result);
+
+    if (!result.triggerWords || !result.ntfyTopic) {
+      console.log('Initializing default configuration');
+      // Save default configuration
+      browser.storage.local.set({
+        triggerWords: window.CONFIG.triggerWords,
+        ntfyTopic: window.CONFIG.ntfyTopic,
+        ntfyServer: window.CONFIG.ntfyServer
+      }).then(() => {
+        console.log('Default configuration initialized successfully');
+        loadSettings(); // Reload settings after initialization
+      }).catch(error => {
+        console.error('Error initializing default configuration:', error);
+        showStatus('Error initializing default configuration!', 'error');
+      });
+    } else {
+      loadSettings();
+    }
+  }).catch(error => {
+    console.error('Error checking storage:', error);
+    showStatus('Error checking storage!', 'error');
+  });
 
   // Add event listeners
   document.getElementById('addWord').addEventListener('click', addNewWord);
@@ -14,10 +41,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Load all settings from storage
 function loadSettings() {
+  console.log('Loading settings...');
   browser.storage.local.get(['triggerWords', 'ntfyTopic', 'ntfyServer']).then((result) => {
+    console.log('Loaded settings:', result);
+
     // Load trigger words
-    const words = result.triggerWords || CONFIG.triggerWords;
+    const words = result.triggerWords || window.CONFIG.triggerWords;
+    console.log('Using trigger words:', words);
+
     const wordList = document.getElementById('wordList');
+    if (!wordList) {
+      console.error('wordList element not found!');
+      return;
+    }
     wordList.innerHTML = '';
 
     words.forEach((word, index) => {
@@ -25,8 +61,18 @@ function loadSettings() {
     });
 
     // Load ntfy settings
-    document.getElementById('ntfyTopic').value = result.ntfyTopic || CONFIG.ntfyTopic;
-    document.getElementById('ntfyServer').value = result.ntfyServer || CONFIG.ntfyServer;
+    const ntfyTopic = document.getElementById('ntfyTopic');
+    const ntfyServer = document.getElementById('ntfyServer');
+
+    if (!ntfyTopic || !ntfyServer) {
+      console.error('ntfy input elements not found!');
+      return;
+    }
+
+    ntfyTopic.value = result.ntfyTopic || window.CONFIG.ntfyTopic;
+    ntfyServer.value = result.ntfyServer || window.CONFIG.ntfyServer;
+
+    console.log('Settings loaded successfully');
   }).catch(error => {
     console.error('Error loading settings:', error);
     showStatus('Error loading settings!', 'error');
@@ -36,7 +82,7 @@ function loadSettings() {
 // Save ntfy settings
 function saveNtfySettings() {
   const topic = document.getElementById('ntfyTopic').value.trim();
-  const server = document.getElementById('ntfyServer').value.trim() || CONFIG.ntfyServer;
+  const server = document.getElementById('ntfyServer').value.trim() || window.CONFIG.ntfyServer;
 
   if (!topic) {
     showStatus('Please enter an ntfy topic!', 'error');
@@ -65,7 +111,7 @@ function addNewWord() {
   }
 
   browser.storage.local.get('triggerWords').then((result) => {
-    const words = result.triggerWords || CONFIG.triggerWords;
+    const words = result.triggerWords || window.CONFIG.triggerWords;
     if (!words.includes(word)) {
       words.push(word);
       browser.storage.local.set({ triggerWords: words }).then(() => {
@@ -112,7 +158,7 @@ function addWordToList(word, index) {
 // Toggle a word's enabled state
 function toggleWord(index, enabled) {
   browser.storage.local.get('triggerWords').then((result) => {
-    const words = result.triggerWords || CONFIG.triggerWords;
+    const words = result.triggerWords || window.CONFIG.triggerWords;
     if (enabled) {
       if (!words.includes(words[index])) {
         words.push(words[index]);
@@ -135,7 +181,7 @@ function toggleWord(index, enabled) {
 // Delete a word
 function deleteWord(index) {
   browser.storage.local.get('triggerWords').then((result) => {
-    const words = result.triggerWords || CONFIG.triggerWords;
+    const words = result.triggerWords || window.CONFIG.triggerWords;
     words.splice(index, 1);
     browser.storage.local.set({ triggerWords: words }).then(() => {
       loadSettings();
