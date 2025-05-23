@@ -14,6 +14,7 @@ cp icon32.png temp_extension/
 cp icon48.png temp_extension/
 cp icon96.png temp_extension/
 cp icon128.png temp_extension/
+cp CHANGELOG.md temp_extension/
 
 # Create the ZIP file
 cd temp_extension
