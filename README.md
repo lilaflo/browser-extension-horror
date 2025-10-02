@@ -2,6 +2,12 @@
 
 A Firefox extension that monitors YouTube video titles in real-time and sends push notifications to your phone when horror or spooky content is detected, helping you avoid unexpected disturbing content.
 
+## Why I Built This
+
+My little son loves watching YouTube, but he would often end up in the rabbit hole of horror clown videos through YouTube's autoplay and recommendations. After watching these videos, he could never sleep well, having nightmares and being scared.
+
+This extension was born out of that problem. Now, when he's watching YouTube on his computer, I get an instant notification on my phone the moment a spooky or horror video appears. This gives me the chance to help him find something else to watch before he gets scared, ensuring peaceful nights for the whole family.
+
 ## Features
 
 - 🔔 **Push notifications to your phone** via [ntfy.sh](https://ntfy.sh) when trigger words are detected
