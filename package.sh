@@ -3,18 +3,13 @@
 # Create a temporary directory
 mkdir -p temp_extension
 
-# Copy all necessary files
+# Copy manifest and changelog
 cp manifest.json temp_extension/
-cp content.js temp_extension/
-cp config.js temp_extension/
-cp options.html temp_extension/
-cp options.js temp_extension/
-cp icon16.png temp_extension/
-cp icon32.png temp_extension/
-cp icon48.png temp_extension/
-cp icon96.png temp_extension/
-cp icon128.png temp_extension/
 cp CHANGELOG.md temp_extension/
+
+# Copy directories
+cp -r src temp_extension/
+cp -r icons temp_extension/
 
 # Create the ZIP file
 cd temp_extension

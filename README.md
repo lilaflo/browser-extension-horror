@@ -1,82 +1,118 @@
 # YouTube Spooky Alert
 
-A Firefox browser extension that helps you avoid unexpected spooky or horror content on YouTube by sending instant notifications when potentially disturbing videos are detected.
+A Firefox extension that monitors YouTube video titles in real-time and sends push notifications to your phone when horror or spooky content is detected, helping you avoid unexpected disturbing content.
 
 ## Features
 
-- 🔔 Instant push notifications via ntfy.sh
-- ⚙️ Fully configurable list of trigger words
-- 🔄 Real-time title monitoring
-- 🎯 Customizable ntfy channel
-- 🚫 No duplicate notifications
-- 🎨 Clean and intuitive settings interface
+- 🔔 **Push notifications to your phone** via [ntfy.sh](https://ntfy.sh) when trigger words are detected
+- ⚙️ **Customizable trigger words** - add or remove any words you want to monitor
+- 🔄 **Real-time monitoring** - detects title changes using MutationObserver
+- 🚫 **No duplicate alerts** - each video triggers only one notification per browser session
+- 🎯 **Self-hosted support** - use your own ntfy server if desired
+- 🔒 **Privacy-focused** - all settings stored locally, no tracking or analytics
 
 ## Installation
+
+### From Firefox Add-ons Store (Recommended)
+
+Install the official extension: [YouTube Spooky Alert on Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/youtube-spooky-alert/)
+
+### Manual Installation (Development)
 
 1. Open Firefox and go to `about:debugging`
 2. Click on "This Firefox" in the left sidebar
 3. Click "Load Temporary Add-on"
 4. Navigate to the directory containing this extension and select the `manifest.json` file
 
-## Configuration
+## Setup
 
-### ntfy Setup
+### 1. Install ntfy on Your Phone
 
-1. Install the ntfy app on your phone:
-   - Android: [Play Store](https://play.google.com/store/apps/details?id=io.heckel.ntfy)
-   - iOS: [App Store](https://apps.apple.com/us/app/ntfy/id1625396347)
-2. Open the extension options
-3. Enter your desired ntfy topic
-4. (Optional) Change the ntfy server if you're using a self-hosted instance
-5. Click "Save ntfy Settings"
+Download the ntfy app to receive notifications:
+- **Android**: [Google Play Store](https://play.google.com/store/apps/details?id=io.heckel.ntfy)
+- **iOS**: [App Store](https://apps.apple.com/us/app/ntfy/id1625396347)
 
-### Trigger Words
+### 2. Configure the Extension
 
-1. Open the extension options
-2. Add your custom trigger words
-3. Words are case-insensitive
-4. You can add or remove words at any time
-5. Changes take effect immediately
+1. Click the extension icon or go to Add-ons → YouTube Spooky Alert → Options
+2. **ntfy Configuration**:
+   - The extension auto-generates a unique channel name on first install (e.g., `SPOOKY-ALERTS-123`)
+   - Copy this channel name to your ntfy mobile app to subscribe
+   - Optionally change the ntfy server URL if using a self-hosted instance
+   - Click "Save ntfy Settings"
+
+3. **Customize Trigger Words** (optional):
+   - The extension comes with 30+ default horror-related trigger words
+   - Add new words by typing in the input field and clicking "Add Word"
+   - Remove words by clicking the "Delete" button next to them
+   - All words are case-insensitive
+   - Changes take effect immediately
 
 ## How It Works
 
-1. The extension monitors YouTube page titles
-2. When a title contains any of your trigger words:
-   - A notification is sent to your ntfy channel
-   - The notification includes the video title and URL
-   - You can click the notification to open the video
-3. Each video is only notified once per session
+1. **Monitoring**: The extension runs on all YouTube pages and uses a MutationObserver to watch for page title changes in real-time
+2. **Detection**: When a video title contains any of your configured trigger words (case-insensitive match), the extension triggers an alert
+3. **Notification**: A push notification is sent to your ntfy channel containing:
+   - The video title
+   - The full YouTube URL
+   - A clickable link to open the video
+4. **Deduplication**: Each video only triggers one notification per browser session to avoid spam
 
 ## Default Trigger Words
 
-- horror
-- scary
-- creepy
-- terrifying
-- haunted
-- ghost
-- paranormal
-- supernatural
-- demon
-- possession
+The extension comes pre-configured with 30 horror and spooky-related trigger words:
 
-## Privacy
+**Horror & Fear**: horror, scary, creepy, terrifying, haunted, disturbing, eerie, sinister, macabre, gothic
 
-- All settings are stored locally in your browser
-- No data is sent to any server except ntfy.sh
-- No tracking or analytics
-- Open source and transparent
+**Supernatural**: ghost, paranormal, supernatural, demon, possession, spirit, occult, cursed, haunting, witch
 
-## Contributing
+**Creatures**: monster, zombie, vampire, werewolf
 
-Feel free to submit issues, fork the repository, and create pull requests for any improvements.
+**Genres**: psychological, thriller, suspense, mystery, dark, mysterious
+
+## Privacy & Security
+
+- **Local storage only**: All settings (trigger words, ntfy configuration) are stored locally in Firefox using the browser.storage API
+- **No data collection**: No tracking, analytics, or telemetry
+- **Minimal permissions**: Only requires access to YouTube pages and ntfy.sh for notifications
+- **Open source**: Full source code available for review
+- **Third-party data**: Notification content is sent only to your configured ntfy server (default: ntfy.sh)
+
+## Development
+
+### Project Structure
+
+```
+/
+├── src/                    # Source files
+│   ├── config.js          # Default configuration and channel name generator
+│   ├── content.js         # Content script for YouTube monitoring
+│   ├── options.js         # Settings page logic
+│   └── options.html       # Settings UI
+├── icons/                  # Extension icons (16, 32, 48, 96, 128)
+├── manifest.json          # Extension manifest (Manifest v2)
+└── package.sh             # Build script for XPI packaging
+```
+
+### Building
+
+```bash
+# Package extension for distribution
+./package.sh
+```
+
+This creates `youtube-spooky-alert.xpi` which can be submitted to Firefox Add-ons.
+
+### Contributing
+
+Contributions are welcome! Please:
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+Report issues at: https://github.com/lilaflo/youtube-spooky-alert/issues
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Files
-
-- `manifest.json`: Extension configuration
-- `content.js`: Script that handles title logging and notification sending
-- `config.js`: Configuration file for ntfy settings
+MIT License - see the LICENSE file for details.
